@@ -2,6 +2,8 @@
 
 Download/grab binary posts from NNTP (Usenet) servers using Node.js.
 
+[ ![Codeship Status for radekstepan/nzb-grabber-js](https://www.codeship.io/projects/a310f8d0-b344-0130-ecd7-6e1ddaa2b72b/status?branch=master)](https://www.codeship.io/projects/4160)
+
 ```bash
 $ npm install nzb-grabber-js
 ```

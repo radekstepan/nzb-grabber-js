@@ -36,9 +36,9 @@ class UsenetServer
                     article = param[1...- 3] # ends with \r\n too
                     # Load it.
                     fs.readFile __dirname + '/fixtures/articles/' + article, (err, buffer) ->
-                        return socket.write '500 Article not found' if err
+                        return socket.write '430 Article not found' + end if err
                         # Respond with the article wrapper in headers.
-                        socket.write Buffer.concat [ new Buffer('200 Here you go mate\r\n'), buffer, new Buffer('.\r\n') ]
+                        socket.write Buffer.concat [ new Buffer('200 Here you go mate' + end), buffer, new Buffer('.\r\n') ]
 
     # Expose error handler.
     error: (cb) ->
