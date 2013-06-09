@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nzb xmlns="http://www.newzbin.com/DTD/2003/nzb">
+    <file poster="CPP-gebruiker@domein.nl (CPP-Gebruiker)" date="1370093062" subject="(b.,bnn.k;klhgjrn) [1/3] - &quot;b.,bnn.k;klhgjrn.rar&quot; yEnc (1/1)">
+        <groups>
+            <group>alt.binaries.test</group>
+        </groups>
+        <segments>
+            <segment bytes="317274" number="1">part1of1.dEq031KFxHfMEr9&amp;Il04@camelsystem-powerpost.local</segment>
+        </segments>
+    </file>
+    <file poster="CPP-gebruiker@domein.nl (CPP-Gebruiker)" date="1370093062" subject="(b.,bnn.k;klhgjrn) [2/3] - &quot;b.,bnn.k;klhgjrn.rar.par2&quot; yEnc (1/1)">
+        <groups>
+            <group>alt.binaries.test</group>
+        </groups>
+        <segments>
+            <segment bytes="408" number="1">part1of1.7bblmuGd6AVb2cDJdQVc@camelsystem-powerpost.local</segment>
+        </segments>
+    </file>
+    <file poster="CPP-gebruiker@domein.nl (CPP-Gebruiker)" date="1370093062" subject="(b.,bnn.k;klhgjrn) [3/3] - &quot;b.,bnn.k;klhgjrn.rar.vol0+1.PAR2&quot; yEnc (1/2)">
+        <groups>
+            <group>alt.binaries.test</group>
+        </groups>
+        <segments>
+            <segment bytes="384068" number="1">part1of2.9baZrC95gM6JqR$4X5ck@camelsystem-powerpost.local</segment>
+            <segment bytes="408" number="2">part2of2.9baZrC95gM6JqR$4X5ck@camelsystem-powerpost.local</segment>
+        </segments>
+    </file>
+</nzb>
