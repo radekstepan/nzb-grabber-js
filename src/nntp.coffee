@@ -166,6 +166,14 @@ class NNTPWorker
             when 'ARTICLE_BEGIN'
                 # Get the code.
                 @code = getCode()
+
+                # Missing article?
+                if @code is '430'
+                    # Early bath for him.
+                    @callbacks.call @code, null
+                    @state = 'READY' # ready again
+                    return
+                
                 # Does the article end now?
                 if isArticleEnd()
                     @state = 'READY' # ready again
@@ -216,7 +224,7 @@ class NNTPWorker
             steps = [ @connect, sendGroup, sendArticle ]
         else
             # Change groups?
-            if self.group isnt group
+            if @group isnt group
                 steps = [ sendGroup, sendArticle ]
             else
                 steps = [ sendArticle ]

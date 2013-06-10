@@ -23,7 +23,7 @@ module.exports =
             client = new NzbGrabber
                 'host': 'localhost'
                 'port': port,
-                'conn': 1
+                'conn': 2
 
             # Here be files as we receive them.
             files = {}
@@ -33,6 +33,8 @@ module.exports =
                 return cb err if err
                 client.grab nzb, (err, filename, chunk, done) ->
                     return cb err if err
+
+                    # console.log filename, chunk.length, done
 
                     # Push this chunk to the stack.
                     files[filename] ?= []

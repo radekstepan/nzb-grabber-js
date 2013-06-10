@@ -1,6 +1,6 @@
 {
     "name": "nzb-grabber-js",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "keywords": [ "nzb", "usenet", "grabber", "leecher", "download", "nntp", "yenc" ],
     "author": "Radek <dev@radekstepan.com>",
     "dependencies": {

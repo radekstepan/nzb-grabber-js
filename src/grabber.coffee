@@ -8,12 +8,6 @@ buffertools = require 'buffertools'
 
 class NzbGrabber
 
-    # These are the workers with the head being the first available one.
-    workers: []
-
-    # Master queue of chunks to grab.
-    queue: null
-
     # Just save the opts.
     constructor: (@opts) ->
         throw 'No conections' if !@opts.conn
@@ -21,16 +15,36 @@ class NzbGrabber
         # Create workers of n concurrent connections.
         workers = ( new NNTPWorker(@opts) for i in [0...@opts.conn] )
 
-        # Create an async queue running a chunk job.
-        @queue = async.queue ({ group, article }, cb) ->
-            # Get the first ready worker.
-            for worker in workers
-                unless worker.state is 'BUSY'
-                    # Over to you monkey.
-                    return worker.getArticle group, article, cb
+        self = @
 
-        # Concurrency of n.
-        , @opts.conn
+        # The queue of jobs.
+        @queue = do ->
+            # Internal.
+            q = []
+
+            # Get a job from the head of the queue.
+            'next': ->
+                # Take the head.
+                if task = q[0]
+                    # Expand.
+                    [ group, article, callback ] = task
+                    # Do we have any workers ready?
+                    for worker in workers when worker.state isnt 'BUSY'
+                        # OK, so this task is now gone.
+                        q.shift()
+                        # Over to you monkey.
+                        return worker.getArticle group, article, (err, code, buffer) ->
+                            # Call back.
+                            callback err, buffer
+                            # Call the next job maybe?
+                            self.queue.next()
+
+            # Push a job to the stack.
+            'push': (chunk, callback) ->
+                # Queue the job.
+                q.push [ chunk.group, chunk.article, callback ]
+                # Do at least one job.
+                self.queue.next()
 
     ###
     Grab files specified in the input NZB package.
@@ -51,8 +65,8 @@ class NzbGrabber
 
         # For each file to download (series).
         , (files, cb) ->
-            # How many files to do still.
-            todo = files.length
+            # How many chunks to do across all files? Increase when traversing files.
+            todo = 0
 
             files.forEach (file) ->
                 # This will be our filename (from the article).
@@ -60,21 +74,20 @@ class NzbGrabber
                 # Cache of processed chunks (to preserve order and when we do not have a filename yet).
                 cache = []
                 # How many chunks to do still.
-                chunks = file.length
+                todo += chunks = file.length
 
                 # For each chunk.
                 file.forEach (chunk, i) ->
                     # Schedule to download this chunk in parallel.
                     # Need to return them in order so as to easily append to the end of files.
-                    self.queue.push chunk, (err, code, buffer) ->
-                        log.inf 'Article ' + chunk.article.bold + ' received'
-
+                    self.queue.push chunk, (err, buffer) ->
                         # If not found...
-                        if err or not buffer
+                        unless buffer
                             log.err chunk.subject.bold + ' (' + (i + 1) + '/' + file.length + ') missing'
-                            # Create a buffer of size and fill with zeroes.
+                            # Create a buffer of size and fill with zeroes (sometimes nzb is incorrect though!).
                             decoded = (new Buffer(chunk.bytes)).fill 0
                         else
+                            log.inf chunk.subject.bold + ' (' + (i + 1) + '/' + file.length + ') received'
                             # yEnc decode (sync, no complaints, errors fixed by par2).
                             [ filename, decoded ] = yenc buffer
                         
@@ -102,17 +115,12 @@ class NzbGrabber
                                 continue if typeof(item) is 'boolean'
                                 
                                 # Logging of the chunk returned.
-                                # Which chunk is this?
                                 seg = ''
                                 if file.length isnt 1 then seg = ' (' + j + '/' + file.length + ')'
-                                # Is the size unexpected?
-                                if file[j - 1].bytes isnt item.length
-                                    log.err 'File ' + filename.bold + seg + ' done ' + item.length + ' bytes, expected ' + file[j - 1].bytes + ' bytes'
-                                else
-                                    log.inf 'File ' + filename.bold + seg + ' done ' + item.length + ' bytes'
+                                log.inf 'File ' + filename.bold + seg + ' done'
                                 
                                 # Done = no more chunks cache and no more files.
-                                cb null, filename, item, !chunks and !(todo -= 1)
+                                cb null, filename, item, !(todo -= 1)
                                 # Say this part was already returned.
                                 cache[j - 1] = yes
 
