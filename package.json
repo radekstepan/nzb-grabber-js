@@ -9,7 +9,6 @@
         "buffer-crc32": "~0.2.1",
         "buffertools": "1.1.1",
         "xml2js": "~0.2.7",
-        "yenc": "~0.9.1",
         "node-logging": "0.1.6",
         "watchr": "2.4.3"
     },
