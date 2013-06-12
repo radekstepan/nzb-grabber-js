@@ -169,9 +169,9 @@ class NNTPWorker
 
                 # Missing article?
                 if @code is '430'
+                    @state = 'READY' # ready again
                     # Early bath for him.
                     @callbacks.call @code, null
-                    @state = 'READY' # ready again
                     return
                 
                 # Does the article end now?
