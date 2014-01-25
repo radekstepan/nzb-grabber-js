@@ -26,3 +26,6 @@ client.grab nzbFile, (err, filename, chunk, done) ->
 ```
 
 Have a look into `./example/watch.coffee`.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/radekstepan/nzb-grabber-js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
