@@ -1,4 +1,4 @@
-# nzb-grabber-js
+![image](https://raw.github.com/intermine/nzb-grabber-js/master/logo.png)
 
 Download/grab binary posts from NNTP (Usenet) servers using Node.js.
 
