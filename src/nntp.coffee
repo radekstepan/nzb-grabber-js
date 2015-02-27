@@ -11,7 +11,7 @@ id = 0
 # A single conenction worker.
 class NNTPWorker
 
-    # Our worker is state. Offline/Ready/Busy
+    # Our worker's state. Offline/Ready/Busy
     state: 'OFFLINE'
 
     # Last error to have happened on our worker.
@@ -150,7 +150,7 @@ class NNTPWorker
         # Remove headers and the trailing dot on input.
         removeHeaders = (input) ->
             length = input.length
-            input.slice input.indexOf('\r\n\r\n') + 4, length - 3
+            input.slice buffertools.indexOf(input, '\r\n\r\n') + 4, length - 3
 
         # What mode are we in?
         switch @mode
